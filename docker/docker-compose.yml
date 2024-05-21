@@ -1,0 +1,43 @@
+# This is a sample Docker Compose file that can be used to start the
+# services required by Database Versioning POC.
+version: '3.8'
+
+# Define the networks
+networks:
+  logging_filter_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+# Define the services
+# 1. Postgres
+services:
+  # See https://hub.docker.com/_/postgres for more details about the
+  # environment variables used to configure the PostgreSQL database.
+  postgres:
+    image: postgres:16.3
+    container_name: postgres-migration
+    restart: always
+    # set shared memory limit when using docker-compose
+    shm_size: 128mb
+    networks:
+      - logging_filter_network
+    environment:
+      - POSTGRES_USER=migration_user
+      - POSTGRES_PASSWORD=migration_password
+      - POSTGRES_DB=migration_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql@14/data:rw
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8090:8080"
+
+# Define the volumes
+volumes:
+  postgres_data:
+    driver: local
