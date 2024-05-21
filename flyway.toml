@@ -1,0 +1,11 @@
+# More information on the parameters can be found 
+# here: https://documentation.red-gate.com/flyway/flyway-cli-and-api/configuration/parameters
+
+[environments.default]
+url = "jdbc:postgresql://localhost:5432/migration_db"
+user = "migration_user"
+password = "migration_password"
+
+[flyway]
+locations = ["filesystem:sql"]
+
